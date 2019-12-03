@@ -10,6 +10,8 @@ public class AccountController {
 	private AccountModel accModel;
 	private User user;
 	private int counter = 0;
+	private Budget budget = new Budget();
+
 
 
 	public AccountController(AccountView viewIn, AccountModel modelIn){
@@ -38,7 +40,6 @@ public class AccountController {
 
 			@Override
 			public void handle(ActionEvent event) {
-				Budget budget = new Budget();
 				if(counter == 0){
 					if(accView.pass1.getText().equals(accView.pass2.getText())){
 						user = new User();
@@ -56,9 +57,8 @@ public class AccountController {
 					try{
 						user.setName(accView.textField1.getText());
 						budget.setWeeklyEarnings(Double.parseDouble(accView.textField2.getText()));
-						budget.setGoal(Double.parseDouble(accView.textField3.getText()));
+						budget.setGoal(Double.parseDouble(accView.textField3.getText()), accView.goalNameField.getText());
 						budget.setRent(Double.parseDouble(accView.textField4.getText()));
-
 						counter++;
 						accView.redraw(counter);
 					}
@@ -77,17 +77,25 @@ public class AccountController {
 						budget.setEducation(Double.parseDouble(accView.textField11.getText()));
 						budget.setOther(Double.parseDouble(accView.textField12.getText()));
 						user.setBudget(budget);
-						
+
 						//Saving new user would go here
 						Main.model.saveUser(user);
 						Main.model.setWorkingWith(user);
-					    Main.dashcontroller.showView();
+						Main.model.getWorkingWith().loadPurchases();
 
+						Main.dashview = new DashboardView();
+						Main.expenseview = new NewExpenseView();
+						Main.dashcontroller = new DashboardController();
+					    Main.dashcontroller.showView();
+					    Main.iModel.setDisplayed(Displayed.DASHBOARD);
 						Stage s = (Stage)(accView.getScene().getWindow());
 						s.close();
 					}
-					catch(Exception e){
+					catch(NumberFormatException e){
 						accView.errorLabel.setText("Please put input in correct format");
+					}
+					catch(Exception e){
+						e.printStackTrace();
 					}
 				}
 				
@@ -113,14 +121,20 @@ public class AccountController {
 							Main.model.getWorkingWith().setName(accView.textField1.getText());
 							Main.model.getWorkingWith().setName(accView.textField1.getText());
 							Main.model.getWorkingWith().getBudget().setWeeklyEarnings(Double.parseDouble(accView.textField2.getText()));
-							Main.model.getWorkingWith().getBudget().setGoal(Double.parseDouble(accView.textField3.getText()));
+							Main.model.getWorkingWith().getBudget().setGoal(Double.parseDouble(accView.textField3.getText()), accView.goalNameField.getText());
 							Main.model.getWorkingWith().getBudget().setRent(Double.parseDouble(accView.textField4.getText()));
 							
-							accView.errorLabel.setText("Changes saved");
+							if (Main.model.db.updateUserInfo()){
+								accView.errorLabel.setText("Changes saved");
+							}
+							else {
+								accView.errorLabel.setText("Error saving changes");
+							}
 						}
 						else{
 							accView.errorLabel.setText("Passwords do not match");
 						}
+						
 						
 						
 					}
@@ -138,8 +152,13 @@ public class AccountController {
 						Main.model.getWorkingWith().getBudget().setPersonal(Double.parseDouble(accView.textField10.getText()));
 						Main.model.getWorkingWith().getBudget().setEducation(Double.parseDouble(accView.textField11.getText()));
 						Main.model.getWorkingWith().getBudget().setOther(Double.parseDouble(accView.textField12.getText()));
-						
-						accView.errorLabel.setText("Changes saved");
+						if (Main.model.db.updateBudgetInfo()){
+							accView.errorLabel.setText("Changes saved");
+						}
+						else {
+							accView.errorLabel.setText("Error saving changes");
+						}
+
 					}
 					catch(Exception e){
 						accView.errorLabel.setText("Please put input in correct format");

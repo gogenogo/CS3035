@@ -46,6 +46,7 @@ public class View extends Pane{
 				l.setFont(Font.font("Open Sans", 14));
 				l.setTextFill(Main.forText);
 				addButton = new ImageView(new Image("addButton.png"));
+				
 				addButton.setFitHeight(60); 
 				addButton.setFitWidth(60);
 				vbox.setAlignment(Pos.CENTER);
@@ -56,6 +57,7 @@ public class View extends Pane{
 				c = users.get(i-1).getIcon();
 				c.setFitHeight(60); 
 				c.setFitWidth(60);
+				c.setEffect(users.get(i - 1).getIcon().getEffect());
 				l.setFont(Font.font("Open Sans", 14));
 				l.setTextFill(Main.forText);
 				vbox.setAlignment(Pos.CENTER);

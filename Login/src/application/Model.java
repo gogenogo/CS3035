@@ -23,26 +23,8 @@ public class Model {
 	public Model(){
 		connection = db.connector();
 
-		users = new ArrayList<User>();
-		getUser();
-		/*
-		for(int i = 1; i<4; i++){
-			users.add(new User(i, "User #" + i, "password", new Image("blank.png")));
-			Budget budgetIn = new Budget();
-			budgetIn.setDiningOut(100);
-			budgetIn.setEducation(100);
-			budgetIn.setEntertainment(100);
-			budgetIn.setGas(100);
-			budgetIn.setGoal(100);
-			budgetIn.setGroceries(100);
-			budgetIn.setHealth(100);
-			budgetIn.setHome(100);
-			budgetIn.setOther(100);
-			budgetIn.setPersonal(100);
-			budgetIn.setRent(100);
-			budgetIn.setWeeklyEarnings(100);
-			users.get(i-1).setBudget(budgetIn);
-		}*/
+		users = db.getUser();
+		
 	}
 	
 	public ArrayList<User> getUsersList(){
@@ -92,41 +74,42 @@ public class Model {
 			resultSet.close();
 		}
 	}
-
-	public void getUser(){
-		try {
-			String sql = "SELECT * FROM User";
-
-            Statement stmt  = connection.createStatement();
-            ResultSet rs    = stmt.executeQuery(sql);
-
-           // loop through the result set
-           while (rs.next()) {
-
-        	   users.add(new User (rs.getInt("userId"),(rs.getString("firstName") + " " + rs.getString("lastName")), rs.getString("password"),new Image("blank.png") ));
-//               System.out.println(rs.getInt("userId") +  "\t" +
-//                                  rs.getString("firstName") + "\t" +
-//                                  rs.getString("lastName"));
-           }
-		} catch (Exception e) {
-			System.out.println("ERROR GETTING INFORMATION");
-		}
-	}
+ 
 
 	public void saveUser(User user) {
 		try {
 		    Statement stmt  = connection.createStatement();
-		    		
-		    String sql = "INSERT INTO USER (firstName, lastName, password, income) values ('" + user.getName() + "', '', '" + user.getPassword() + "', '" + user.getBudget().getWeeklyEarnings() + "');"; 
+
+		    String sql = "INSERT INTO USER (firstName, lastName, password, income) values ('"
+		    				+ user.getName() + "', '', '" + user.getPassword() + "', '" + user.getBudget().getWeeklyEarnings() + "');";
 
 			int rs    = stmt.executeUpdate(sql);
 			if(rs > 0){
-				System.out.println("Worked!");
-				users.add(user);
+				sql = "Select * from USER where firstName = ? and password = ?;";
+				PreparedStatement preparedStatement = connection.prepareStatement(sql);
+				preparedStatement.setString(1, user.getName());
+				preparedStatement.setString(2, user.getPassword());
+				ResultSet resultSet = preparedStatement.executeQuery();
 
+				if (resultSet.next()){
+					sql = "INSERT INTO BUDGET (userId, weeklyEarnings, rentPerMonth, groceries, gas, entertainment, diningOut, home, health, personal, education, other, changed) values ('"
+										+ resultSet.getInt("userId") + "', '"  +user.getBudget().getWeeklyEarnings() + "', '" + user.getBudget().getRent() + "', '" + user.getBudget().getGroceries() +"', '"
+										+ user.getBudget().getGas() + "', '" + user.getBudget().getEntertainment()
+										+ "', '"  + user.getBudget().getDiningOut() + "', '" + user.getBudget().getHome() + "', '" + user.getBudget().getHealth()
+										+ "', '"  + user.getBudget().getPersonal() + "', '"  + user.getBudget().getEducation() + "', '"  + user.getBudget().getOther() + "', 0); ";
+					rs = stmt.executeUpdate(sql);
+
+					if (rs > 0 ){
+						System.out.println("YAY I DID IT");
+					}
+				}
+				sql = "insert into goal(userId,entry,amount) values ('" + resultSet.getInt("userId") + "', '"
+						+ user.getBudget().getGoal().getGoalName() + "', '" + user.getBudget().getGoal().getGoal() +"')";
+
+						rs = stmt.executeUpdate(sql);				users.add(user);
 			}
 			else{
-				System.out.println("Didn't work!");
+				System.out.println("error adding a new user");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -134,10 +117,12 @@ public class Model {
 		}
 
 	}
-
-//	for(int i = 1; i<4; i++){
-//		users.add(new User("User #" + i, "password", new Image("blank.png")));
-//	}
-
 	
+	public void resetColours(){
+		for(int i = 0; i < users.size(); i++){
+			users.get(i).resetColor();
+		}
+	}
+
+
 }

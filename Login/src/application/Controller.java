@@ -102,7 +102,7 @@ public class Controller {
 					if(selected!=null){
 						ColorAdjust bright = new ColorAdjust();
 						bright.setBrightness(0);
-						selected.setEffect(bright);
+						Main.model.resetColours();
 					}
 				}
 			}

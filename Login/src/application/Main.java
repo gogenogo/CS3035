@@ -32,9 +32,9 @@ public class Main extends Application {
 	public static final ToolbarController tbController = new ToolbarController(tbView);
 	
 
-	public static final DashboardView dashview = new DashboardView();
-	public static final NewExpenseView expenseview = new NewExpenseView();
-	public static final DashboardController dashcontroller = new DashboardController();
+	public static DashboardView dashview; //= new DashboardView();
+	public static NewExpenseView expenseview;// = new NewExpenseView();
+	public static DashboardController dashcontroller;// = new DashboardController();
 
 	
 	@Override

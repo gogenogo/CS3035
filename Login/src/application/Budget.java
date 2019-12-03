@@ -8,7 +8,6 @@ public class Budget {
 	private double groceries = 0;
 	private double gas = 0;
 	private double entertainment = 0;
-	private double diningOut = 0;
 	private double home = 0;
 	private double health = 0;
 	private double personal = 0;
@@ -20,7 +19,7 @@ public class Budget {
 	
 	public double budgetSpent(){
 		double spent = 0;
-		spent += rentPerWeek + groceries + gas + entertainment + diningOut + home + health + personal + education + other;
+		spent += rentPerWeek + groceries + gas + entertainment + home + health + personal + education + other;
 		return spent;
 	}
 	
@@ -34,8 +33,8 @@ public class Budget {
 		weeklyEarnings = value;
 	}
 	
-	public void setGoal(double value) {
-		goal = new Goal(value, "");
+	public void setGoal(double value, String s) {
+		goal = new Goal(value, s);
 	}
 	
 	public void setRent(double value) {
@@ -55,9 +54,6 @@ public class Budget {
 		entertainment = value;
 	}
 	
-	public void setDiningOut(double value) {
-		diningOut = value;
-	}
 	
 	public void setHome(double value) {
 		home = value;
@@ -90,7 +86,7 @@ public class Budget {
 	}
 	
 	public double getRent() {
-		return rentPerMonth;
+		return rentPerWeek;
 	}
 	
 	public double getGroceries() {
@@ -103,10 +99,6 @@ public class Budget {
 	
 	public double getEntertainment() {
 		return entertainment;
-	}
-	
-	public double getDiningOut() {
-		return diningOut;
 	}
 	
 	public double getHome() {
@@ -135,5 +127,13 @@ public class Budget {
 
 	public void setCarry(double carry) {
 		this.carry = carry;
+	}
+
+	public double getDiningOut() {
+		return 0;
+	}
+	
+	public void setDiningOut(double value){
+		
 	}
 }

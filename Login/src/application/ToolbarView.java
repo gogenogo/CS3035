@@ -41,8 +41,8 @@ public class ToolbarView extends Pane{
 		hamburger.setGraphic(iv);
 		addPurchase = new MenuItem("New Purchase");
 		addDiary = new MenuItem("Check Diary");
-		changeBudget = new MenuItem("Change Budget/Goal");
-		accountSettings = new MenuItem("Account Settings");
+		changeBudget = new MenuItem("Change Budget");
+		accountSettings = new MenuItem("Account/Goal Settings");
 		about = new MenuItem("About Us/Help");
 		signOut = new MenuItem("Sign Out");
 		hamburger.getItems().addAll(addPurchase, addDiary, changeBudget, accountSettings, about, signOut);

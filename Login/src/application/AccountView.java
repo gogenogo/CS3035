@@ -46,6 +46,10 @@ public class AccountView extends Pane{
 	public TextField textField12;
 	public Label label13;
 	
+	
+	public Label goalNameLabel;
+	public TextField goalNameField;
+	
 	public PasswordField pass1;
 	public PasswordField pass2;
 	public Label errorLabel;
@@ -59,6 +63,10 @@ public class AccountView extends Pane{
 		confirmButton = new Button("Confirm");
 		backButton = new Button("Back");
 		String[] questions = aModel.getQuestion();
+		goalNameLabel = new Label("What are you saving the money for?");
+		goalNameField = new TextField();
+		goalNameLabel.setFont(Font.font("Open Sans", 14));
+		goalNameLabel.setTextFill(Main.forText);
 		label1 = new Label(questions[0]);
 		label1.setFont(Font.font("Open Sans", 14));
 		label1.setTextFill(Main.forText);
@@ -151,7 +159,7 @@ public class AccountView extends Pane{
 			hbox.getChildren().addAll(errorLabel, backButton, confirmButton);
 			hbox.setAlignment(Pos.CENTER_RIGHT);
 			vbox.setAlignment(Pos.CENTER);
-			vbox.getChildren().addAll(label1,textField1, label2,textField2, label3,textField3, label4,textField4, hbox);
+			vbox.getChildren().addAll(label1,textField1, label2,textField2, label3,textField3,goalNameLabel, goalNameField, label4,textField4, hbox);
 			vbox.setPrefSize(400, 570);
 			vbox.setPadding(new Insets(15));
 			this.getChildren().clear();
@@ -234,8 +242,9 @@ public class AccountView extends Pane{
 			pass2.setText(Main.model.getWorkingWith().getPassword());
 			textField1.setText(Main.model.getWorkingWith().getName());
 			textField2.setText(Main.model.getWorkingWith().getBudget().getWeeklyEarnings() + "");
-			textField3.setText(Main.model.getWorkingWith().getBudget().getGoal() + "");
+			textField3.setText(Main.model.getWorkingWith().getBudget().getGoal().getGoal() + "");
 			textField4.setText(Main.model.getWorkingWith().getBudget().getRent() + "");
+			goalNameField.setText(Main.model.getWorkingWith().getBudget().getGoal().getGoalName() + "");
 
 			hbox.getChildren().clear();
 			vbox.getChildren().clear();
@@ -243,7 +252,7 @@ public class AccountView extends Pane{
 			hbox.getChildren().addAll(errorLabel, confirmButton);
 			hbox.setAlignment(Pos.CENTER_RIGHT);
 			vbox.setAlignment(Pos.CENTER);
-			vbox.getChildren().addAll(label13, pass1, pass2, label1,textField1, label2,textField2, label3,textField3, label4,textField4, hbox);
+			vbox.getChildren().addAll(label13, pass1, pass2, label1,textField1, label2,textField2, label3,textField3, goalNameLabel, goalNameField, label4,textField4, hbox);
 			vbox.setPrefSize(400, 570);
 			vbox.setPadding(new Insets(15));
 			this.getChildren().clear();

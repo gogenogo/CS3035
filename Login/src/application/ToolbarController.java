@@ -42,7 +42,19 @@ public class ToolbarController {
 
 			@Override
 			public void handle(ActionEvent event) {
-				System.out.println("Add Diary Clicked");
+				DiaryView diaryView = new DiaryView();
+				DiaryController dairyController = new DiaryController(diaryView);
+				VBox vbox = new VBox();
+				Stage oldStage = (Stage) tbView.getScene().getWindow();
+				vbox.getChildren().addAll(tbView, diaryView);
+				Stage newStage = new Stage();
+				Scene newScene = new Scene(vbox, 400, 600);
+
+
+				oldStage.close();
+				newStage.setScene(newScene);
+			    newStage.setResizable(false);
+				newStage.show();
 				Main.iModel.setDisplayed(Displayed.OTHER);
 
 			}
@@ -149,14 +161,15 @@ public class ToolbarController {
 				Displayed goTo = Main.iModel.getBack();
 				if(goTo == Displayed.DASHBOARD){
 					Stage stage = (Stage) tbView.getScene().getWindow();
+					stage.close();
 					VBox newBox = new VBox();
+					Main.dashview = new DashboardView();
+					Main.dashcontroller = new DashboardController();
 					newBox.getChildren().addAll(tbView, Main.dashview);
 					Scene newScene = new Scene(newBox, 400, 750);
 					Stage newStage = new Stage();
 					newStage.setScene(newScene);
 					newStage.setResizable(false);
-
-					stage.close();
 					newStage.show();
 				}
 				else if(goTo == Displayed.OPEN){

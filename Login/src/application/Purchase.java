@@ -1,6 +1,11 @@
 package application;
 
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import application.Purchase.Category;
 
 public class Purchase {
 	public enum Category {GROCERIES, GAS, ENTERTAINMENT, HOME, HEALTH, PERSONAL, EDUCATION, OTHER};	
@@ -8,12 +13,20 @@ public class Purchase {
 	private double amount;
 	private String location;
 	private Date date;
+	private NumberFormat format = NumberFormat.getCurrencyInstance();
 	
 	public Purchase(Category newCat, double newAmount, String newLocation){
 		setCategory(newCat);
 		setAmount(newAmount);
 		setLocation(newLocation);
 		setDate(new Date());
+	}
+
+	public Purchase(Category newCat, double newAmount, String newLocation, Date newDate) {
+		setCategory(newCat);
+		setAmount(newAmount);
+		setLocation(newLocation);
+		setDate(newDate);
 	}
 
 	public Category getCategory() {
@@ -46,6 +59,11 @@ public class Purchase {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+	
+	public String toString(){
+		return format.format(amount) + " @ " + location + ", " + date;
+
 	}
 
 }

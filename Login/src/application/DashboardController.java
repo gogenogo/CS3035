@@ -12,7 +12,6 @@ public class DashboardController {
 	
 	//Scene scene = new Scene(b1,400,750);
 	//Scene expense = new Scene(Main.expenseview, 400, 720);
-	Stage primaryStage = new Stage();
 	public DashboardController() {
 		b1.setStyle("-fx-background-color: #EDF8FF;"
 				+ " -fx-font-family: \"Roboto\";"
@@ -20,16 +19,20 @@ public class DashboardController {
 				+ "-fx-font-weight: bold;");
 		b1.setCenter(Main.dashview);
 		Main.dashview.addExpenses.setOnAction(e -> {
+			Stage oldStage = (Stage) Main.tbView.getScene().getWindow();
+			oldStage.close();
 			VBox v = new VBox();
 			v.getChildren().addAll(Main.tbView, Main.expenseview);
 			Main.iModel.setDisplayed(Displayed.PURCHASE);
 			Scene expense = new Scene(v, 400, 600);
-			primaryStage.setScene(expense);
-			primaryStage.show();
+			Stage newStage = new Stage();
+			newStage.setScene(expense);
+			newStage.show();
 		});
 		
 		expensePage();
 	}
+	
 	public void expensePage() {
 		Main.expenseview.doneButton.setOnAction(e -> {
 			// Check to see if all fields are answered
@@ -44,17 +47,25 @@ public class DashboardController {
 		});
 		Main.expenseview.addMore.setOnAction(e -> {
 			// Check to see if all fields are answered
-			Main.expenseview.errorLabel.setText("");
-			Main.expenseview.textAmount.setText("");
-			Main.expenseview.textLocation.setText("");
+			try{
+				submitPurchase();
+				Main.expenseview.textAmount.setText("");
+				Main.expenseview.textLocation.setText("");
+			}
+			catch(Exception exception){
+				Main.expenseview.errorLabel.setText("Make sure to put in a number in for how much it is!");
+			}
 		});
 	}
 	
 	public void showView(){
 		VBox vbox = new VBox();
+		Stage oldStage =(Stage)Main.tbView.getScene().getWindow();
+		oldStage.close();
 		vbox.getChildren().addAll(Main.tbView, Main.dashview);
 		Scene scene =  new Scene(vbox,400,780);
 		vbox.setPrefSize(400,780);
+		Stage primaryStage = new Stage();
 		primaryStage.setScene(scene);
 	    primaryStage.setResizable(false);
 
@@ -97,8 +108,18 @@ public class DashboardController {
 			else if(s.equals("Other")){
 				c = Category.OTHER;
 			}
-			Main.model.getWorkingWith().addPurchases(new Purchase(c, text0, text1));
-			
+			Purchase newPurchase = new Purchase(c, text0, text1);
+
+
+
+			if (Main.model.db.addPurchase(c.name(), Main.model.getWorkingWith().getID(),newPurchase.getDate(), text0, text1)){
+				Main.model.getWorkingWith().addPurchases(newPurchase);
+				Main.dashview.draw();
+				System.out.println("WORKED");
+			}
+			else {
+				System.out.println("ERROR!!! FAIL!!! FIX IT!!!");
+			}			
 		}
 	}
 }
